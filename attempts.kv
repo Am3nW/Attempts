@@ -1,0 +1,142 @@
+<MainScreen>:
+    name:"main_screen"
+    FloatLayout:
+        MDNavigationLayout:
+            ScreenManager:
+                Screen:
+                    BoxLayout:
+                        orientation: 'vertical'
+                        MDTopAppBar:
+                            title: 'ATTEMPTS'
+                            left_action_items: [["menu",lambda x: nav_drawer.set_state("open")]]
+                            elevation:10
+                        Widget:
+                    MDRectangleFlatIconButton:
+                        id: play_button
+                        icon: "play"
+                        text: "PLAY"
+                        bold: True
+                        font_name: "SamsungSans-Bold.ttf"
+                        font_style: "H5"
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        on_press: root.switch_to_playzone()
+            MDNavigationDrawer:
+                id: nav_drawer
+                BoxLayout:
+                    orientation:"vertical"
+                    spacing:"8dp"
+                    padding:"8dp"
+                    Image:
+                        source:"nums3.jpg"
+                    MDNavigationDrawerDivider:
+                    ScrollView:
+                        MDList:
+                            GridLayout:
+                                rows:3
+                                MDSwitch:
+                                    id: screentheme
+                                    active: True
+                                    icon_active: "weather-sunny"
+                                    icon_inactive: "weather-night"
+                                    icon_inactive_color: "grey"
+                                    on_active: app.switch_theme(self.active)
+                                OneLineIconListItem:
+                                    text: "Game Manual"
+                                    on_release: root.switch_to_infopage()
+                                    IconLeftWidget:
+                                        icon: "information"
+                                OneLineIconListItem:
+                                    on_release: root.close_app()
+                                    text: "EXIT"       
+                                    IconLeftWidget:
+                                        icon: "logout"
+<PlayzoneScreen>:
+    name: "playzone"
+    MDRectangleFlatIconButton:
+        icon: "arrow-left-bold"
+        text: 'BACK'
+        size_hint: None, None
+        font_name: "SamsungSans-Bold.ttf"
+        size: "150dp", "36dp"  
+        pos_hint: {'x': 0.05,'y': 0.9} 
+        on_press: root.switch_to_mainscreen()
+    Widget:
+    ScrollView:
+        GridLayout:
+            cols: 3
+            size_hint_y: None
+            height: self.minimum_height
+            row_default_height: "36dp"
+            row_force_default: True
+            MDLabel:
+                text: "ATT"
+                font_name: "SamsungSans-Bold.ttf"
+                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+            MDLabel:
+                text: "ID"
+                font_name: "SamsungSans-Bold.ttf"
+                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+            MDLabel:
+                text: "POS"
+                font_name: "SamsungSans-Bold.ttf"
+                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+            MDLabel:
+                id: showattempt
+                font_name: "SamsungSans-Bold.ttf"
+                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+            MDLabel:
+                id: showid
+                font_name: "SamsungSans-Bold.ttf"
+                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+            MDLabel:
+                id: showpos
+                font_name: "SamsungSans-Bold.ttf"
+                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+
+    MDTextField:
+        id: attempt
+        mode: "rectangle"
+        size_hint_x: None
+        width: "240dp"
+        pos_hint: {"center_x": .4, "center_y": .2}
+        hint_text: "Attempt"
+        size: "150dp", "36dp"
+        helper_text: "Avoid 0" if "0" in attempt.text else ""
+        helper_text_mode: "on_focus"
+        icon_left: "numeric"
+        input_filter: "int"
+        max_text_length: 4
+        on_text_validate: root.show_data()
+    MDRectangleFlatIconButton:
+        id: gobutton
+        icon: "play"
+        text: 'GO'
+        size_hint: None, None
+        font_name: "SamsungSans-Bold.ttf"
+        size: "100dp", "30dp"  
+        pos_hint: {"center_x": .65, "center_y": .195}   
+        on_press: root.attempt_processor(self)
+        on_release: root.show_attempt(self),root.show_id(self),root.show_pos(self)
+        disabled: True if len(set(attempt.text)) != 4 or '0' in attempt.text else False
+   
+<InfoScreen>:
+    name:"infopage"
+    MDBoxLayout:
+        orientation: 'vertical'
+        
+        MDTopAppBar:
+            title: "Game Manual"
+            elevation: 8
+        MDFloatingActionButton:
+            icon:"arrow-left-bold"
+            pos_hint: {'x': 0.05, 'y': 0.7} 
+            on_press: root.switch_to_mainscreen()
+        ScrollView:
+            MDList:
+                TwoLineListItem:
+                    text:"Numbers can't be repeated and can't contain zero"
+                    secondary_text:"This means that when you're trying to guess the hidden number, you can't use the same number more than once, and none of the digits in your guess can be zero."
+                TwoLineListItem:
+                    text:"You will win if you get the 4 correct numbers and 4 correct positions of the hidden number"
+                    secondary_text:"To win the game, you need to guess all four digits of the hidden number correctly and also place them in the correct order."
+        
