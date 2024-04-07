@@ -20,6 +20,12 @@
                         font_style: "H5"
                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
                         on_press: root.switch_to_playzone()
+                    MDRectangleFlatIconButton:
+                        pos_hint: {"center_x": 0.5, "center_y": 0.1}
+                        icon:"information-outline"
+                        text: "Developed By AMEN"
+                        disabled:True
+                        
             MDNavigationDrawer:
                 id: nav_drawer
                 BoxLayout:
@@ -52,47 +58,50 @@
                                         icon: "logout"
 <PlayzoneScreen>:
     name: "playzone"
+    GridLayout:
+        rows:1
+        cols: 3
+        spacing: "0dp"
+        padding: "0dp"
+        MDLabel:
+            text: "ATTEMPT"
+            halign: "center"
+            font_style: "H6"
+            size_hint_y: None
+            height: "32dp"
+            color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+        MDLabel:
+            text: "ID"
+            halign: "center"
+            font_style: "H6"
+            size_hint_y: None
+            height: "32dp"
+            color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+        MDLabel:
+            text: "POS"
+            halign: "center"
+            font_style: "H6"
+            size_hint_y: None
+            height: "32dp"
+            color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+    ScrollView:
+        MDLabel:
+            id: attempt_history
+            text: ""
+            font_name: "SamsungSans-Bold.ttf"
+            halign: "left"
+            valign: "top"
+            size_hint_y: None
+            height: dp(100)
+            color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
     MDRectangleFlatIconButton:
         icon: "arrow-left-bold"
         text: 'BACK'
         size_hint: None, None
         font_name: "SamsungSans-Bold.ttf"
-        size: "150dp", "36dp"  
-        pos_hint: {'x': 0.05,'y': 0.9} 
+        size: "150dp", "36dp"
+        pos_hint: {'x': 0.05, 'y': 0.9}
         on_press: root.switch_to_mainscreen()
-    Widget:
-    ScrollView:
-        GridLayout:
-            cols: 3
-            size_hint_y: None
-            height: self.minimum_height
-            row_default_height: "36dp"
-            row_force_default: True
-            MDLabel:
-                text: "ATT"
-                font_name: "SamsungSans-Bold.ttf"
-                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
-            MDLabel:
-                text: "ID"
-                font_name: "SamsungSans-Bold.ttf"
-                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
-            MDLabel:
-                text: "POS"
-                font_name: "SamsungSans-Bold.ttf"
-                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
-            MDLabel:
-                id: showattempt
-                font_name: "SamsungSans-Bold.ttf"
-                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
-            MDLabel:
-                id: showid
-                font_name: "SamsungSans-Bold.ttf"
-                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
-            MDLabel:
-                id: showpos
-                font_name: "SamsungSans-Bold.ttf"
-                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
-
     MDTextField:
         id: attempt
         mode: "rectangle"
@@ -106,24 +115,22 @@
         icon_left: "numeric"
         input_filter: "int"
         max_text_length: 4
-        on_text_validate: root.show_data()
+        on_text_validate: root.attempt_processor()
     MDRectangleFlatIconButton:
         id: gobutton
         icon: "play"
         text: 'GO'
         size_hint: None, None
         font_name: "SamsungSans-Bold.ttf"
-        size: "100dp", "30dp"  
-        pos_hint: {"center_x": .65, "center_y": .195}   
-        on_press: root.attempt_processor(self)
-        on_release: root.show_attempt(self),root.show_id(self),root.show_pos(self)
-        disabled: True if len(set(attempt.text)) != 4 or '0' in attempt.text else False
-   
+        size: "100dp", "30dp"
+        pos_hint: {"center_x": .65, "center_y": .195}
+        on_press: root.attempt_processor()
+        on_release: root.show_attempts() 
+        disabled: True if len(set(attempt.text)) != 4 or '0' in attempt.text else False 
 <InfoScreen>:
     name:"infopage"
     MDBoxLayout:
         orientation: 'vertical'
-        
         MDTopAppBar:
             title: "Game Manual"
             elevation: 8
@@ -139,4 +146,26 @@
                 TwoLineListItem:
                     text:"You will win if you get the 4 correct numbers and 4 correct positions of the hidden number"
                     secondary_text:"To win the game, you need to guess all four digits of the hidden number correctly and also place them in the correct order."
-        
+<VictoryScreen>:
+    name:"victorypage"
+    MDNavigationLayout:
+        ScreenManager:
+            Screen:
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDTopAppBar:
+                        title:"Victory!"
+                        elevation:10
+                    Widget:
+                MDRectangleFlatIconButton:
+                    icon:"arrow-right"
+                    text:"Continue"
+                    font_name: "SamsungSans-Bold.ttf"
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+                    on_press:root.switch_to_mainscreen()
+                MDLabel:
+                    text: "YOU WON"
+                    font_name: "SamsungSans-Bold.ttf"
+                    font_style:"H6"
+                    halign:"center"
+                    color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
