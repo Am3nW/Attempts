@@ -44,10 +44,6 @@ class InfoScreen(Screen):
 
 class PlayzoneScreen(Screen):
     attempt_history = []
-
-    def switch_to_victoryscreen(self):
-        self.manager.current = "victorypage"
-
     def switch_to_mainscreen(self):
         self.manager.current = "main_screen"
 
@@ -64,6 +60,8 @@ class PlayzoneScreen(Screen):
             history_line = f"{"":<13} {attempt:<40} {id_count:<40} {pos_count:<10}\n"
             full_history_string += history_line
         self.ids.attempt_history.text = full_history_string
+        if attempt == hidden_number:
+            self.manager.current = "victorypage"
 
 class Attempts(MDApp):
     def build(self):
