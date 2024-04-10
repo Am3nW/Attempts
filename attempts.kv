@@ -82,24 +82,19 @@
             height: "32dp"
             color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
     Widget:
-    ScrollView:
-        MDLabel:
-            id: attempt_history
-            text: ""
-            font_name: "SamsungSans-Bold.ttf"
-            halign: "left"
-            valign: "top"
-            size_hint_y: None
-            height: dp(100)
-            color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
-    MDRectangleFlatIconButton:
-        icon: "arrow-left-bold"
-        text: 'BACK'
-        size_hint: None, None
-        font_name: "SamsungSans-Bold.ttf"
-        size: "150dp", "36dp"
-        pos_hint: {'x': 0.05, 'y': 0.9}
-        on_press: root.switch_to_mainscreen()
+    BoxLayout:    
+        ScrollView:
+            MDLabel:
+                id: attempt_history
+                text: ""
+                font_name: "SamsungSans-Bold.ttf"
+                halign: "left"
+                valign: "top"
+                size_hint_y: None
+                height: dp(100)
+                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+        
+            
     MDTextField:
         id: attempt
         mode: "rectangle"
@@ -156,6 +151,7 @@
                         elevation:10
                     Widget:
                 MDRectangleFlatIconButton:
+                    id: continue_button
                     icon:"arrow-right"
                     text:"Continue"
                     font_name: "SamsungSans-Bold.ttf"
