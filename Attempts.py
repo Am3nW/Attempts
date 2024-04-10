@@ -5,6 +5,7 @@ from kivymd.uix.transition import MDFadeSlideTransition
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDFlatButton
+from kivy.properties import BooleanProperty
 from kivy.core.window import Window
 import random
 
@@ -12,9 +13,20 @@ Window.size=(500,700)
 nums = "123456789"
 hidden_number = ''.join(random.sample(nums,4))
 
+
 class VictoryScreen(Screen):
     def switch_to_mainscreen(self):
         self.manager.current = "main_screen"
+        playzone_screen = self.manager.get_screen("playzone")
+        if hasattr(playzone_screen.ids, "attempt_history"):
+            playzone_screen.ids.attempt_history.clear_widgets()
+        if playzone_screen.clear_history_on_exit:
+            playzone_screen.attempt_history = []
+            if hasattr(playzone_screen.ids, "attempt_history"):
+                playzone_screen.ids.attempt_history.text = ""
+            if hasattr(playzone_screen.ids, "attempt"):
+                playzone_screen.ids.attempt.text = ""
+        
 class MainScreen(Screen):
     def switch_to_playzone(self):
         self.manager.current = "playzone"
@@ -44,24 +56,31 @@ class InfoScreen(Screen):
 
 class PlayzoneScreen(Screen):
     attempt_history = []
+    clear_history_on_exit = BooleanProperty(default=True)
+    def reset_game(self):
+        self.attempt_history = []
+        self.ids.attempt.text = ""  
+        global hidden_number 
+        hidden_number = ''.join(random.sample(nums, 4))
+    
     def switch_to_mainscreen(self):
         self.manager.current = "main_screen"
 
     def attempt_processor(self):
-        user_attempt = str(self.ids.attempt.text)
-        attempt = user_attempt
-        id_count = str(sum(1 for digit in attempt if digit in hidden_number))
-        pos_count = str(sum(1 for i in range(4) if attempt[i] == hidden_number[i]))
-        self.attempt_history.append([attempt, id_count, pos_count])
+        self.attempt = str(self.ids.attempt.text)
+        id_count = str(sum(1 for digit in self.attempt if digit in hidden_number))
+        pos_count = str(sum(1 for i in range(4) if self.attempt[i] == hidden_number[i]))
+        self.attempt_history.append([self.attempt, id_count, pos_count])
         self.show_attempts()
+        if self.attempt == hidden_number:
+            self.manager.current = "victorypage"
+
     def show_attempts(self):
-        full_history_string = ""
+        self.full_history_string = ""
         for attempt, id_count, pos_count in self.attempt_history:
             history_line = f"{"":<13} {attempt:<40} {id_count:<40} {pos_count:<10}\n"
-            full_history_string += history_line
-        self.ids.attempt_history.text = full_history_string
-        if attempt == hidden_number:
-            self.manager.current = "victorypage"
+            self.full_history_string += history_line
+        self.ids.attempt_history.text = self.full_history_string
 
 class Attempts(MDApp):
     def build(self):
