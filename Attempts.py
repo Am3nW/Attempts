@@ -74,11 +74,12 @@ class PlayzoneScreen(Screen):
         self.show_attempts()
         if self.attempt == hidden_number:
             self.manager.current = "victorypage"
+        self.ids.attempt.text = ""
 
     def show_attempts(self):
         self.full_history_string = ""
         for attempt, id_count, pos_count in self.attempt_history:
-            history_line = f"{"":<13} {attempt:<40} {id_count:<40} {pos_count:<10}\n"
+            history_line = f"{'':<13} {attempt:<40} {id_count:<40} {pos_count:<10}\n"
             self.full_history_string += history_line
         self.ids.attempt_history.text = self.full_history_string
 
