@@ -92,9 +92,7 @@
                 valign: "top"
                 size_hint_y: None
                 height: dp(100)
-                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
-        
-            
+                color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1) 
     MDTextField:
         id: attempt
         mode: "rectangle"
@@ -103,7 +101,7 @@
         pos_hint: {"center_x": .4, "center_y": .2}
         hint_text: "Attempt"
         size: "150dp", "36dp"
-        helper_text: "Avoid 0" if "0" in attempt.text else ""
+        helper_text: "Avoid 0" if "0" in attempt.text  else "Invalid length" if len(attempt.text) != 4 else ""
         helper_text_mode: "on_focus"
         icon_left: "numeric"
         input_filter: "int"
@@ -135,10 +133,14 @@
             MDList:
                 TwoLineListItem:
                     text:"Numbers can't be repeated and can't contain zero"
-                    secondary_text:"This means that when you're trying to guess the hidden number, you can't use the same number more than once, and none of the digits in your guess can be zero."
+                    disabled:True
+                    font_style:"Subtitle1"
+
                 TwoLineListItem:
-                    text:"You will win if you get the 4 correct numbers and 4 correct positions of the hidden number"
-                    secondary_text:"To win the game, you need to guess all four digits of the hidden number correctly and also place them in the correct order."
+                    text:"You will win if you get the 4 numbers with their correct positions"
+                    font_name: "SamsungSans-Bold.ttf"
+                    disabled:True
+                    font_style:"Subtitle1"
 <VictoryScreen>:
     name:"victorypage"
     MDNavigationLayout:
@@ -163,3 +165,6 @@
                     font_style:"H6"
                     halign:"center"
                     color: (0.3, 1, 0.5, 1) if app.theme_cls.theme_style == 'Dark' else (1, 0.4, 0.5, 1)
+
+        
+
