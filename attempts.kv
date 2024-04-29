@@ -1,3 +1,25 @@
+<Loginscreen>:
+    MDTextField:
+        id:username
+        mode: "rectangle"
+        hint_text: "Username"
+        size_hint_x: None
+        width: "240dp"
+        pos_hint: {"center_x": .5, "center_y": .5}
+    MDTextField:
+        id:pw
+        mode: "rectangle"
+        hint_text: "password"
+        password:True
+        max_text_length:4
+        size_hint_x: None
+        width: "240dp"
+        pos_hint: {"center_x": .5, "center_y": .4}
+    MDRectangleFlatIconButton:
+        icon:"login"
+        text: 'log in'
+        pos_hint: {'center_x': 0.5, 'y': 0.25} 
+        on_press: root.log_in()
 <MainScreen>:
     name:"main_screen"
     FloatLayout:
@@ -30,15 +52,17 @@
                 id: nav_drawer
                 BoxLayout:
                     orientation:"vertical"
-                    spacing:"8dp"
-                    padding:"8dp"
-                    Image:
-                        source:"nums3.jpg"
-                    MDNavigationDrawerDivider:
                     ScrollView:
                         MDList:
                             GridLayout:
-                                rows:3
+                                rows:6
+                                spacing: dp(10)
+                                OneLineIconListItem:
+                                    id:user_name
+                                    text: ""                               
+                                    disabled: 'True'
+                                    IconLeftWidget:
+                                        icon: "account"
                                 MDSwitch:
                                     id: screentheme
                                     active: True
@@ -46,6 +70,7 @@
                                     icon_inactive: "weather-night"
                                     icon_inactive_color: "grey"
                                     on_active: app.switch_theme(self.active)
+                                MDNavigationDrawerDivider:
                                 OneLineIconListItem:
                                     text: "Game Manual"
                                     on_release: root.switch_to_infopage()
@@ -160,7 +185,8 @@
                     pos_hint: {'center_x': 0.5, 'center_y': 0.4}
                     on_press:root.switch_to_mainscreen()
                 MDLabel:
-                    text: "YOU WON"
+                    id:win_txt
+                    text: ""
                     font_name: "SamsungSans-Bold.ttf"
                     font_style:"H6"
                     halign:"center"
